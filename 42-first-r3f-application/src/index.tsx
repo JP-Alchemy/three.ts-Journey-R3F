@@ -7,7 +7,7 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <Canvas>
+  <Canvas camera={{near: 0.1, far: 100, fov: 45}} gl={{antialias: true}}>
     <Experience />
   </Canvas>
 );
