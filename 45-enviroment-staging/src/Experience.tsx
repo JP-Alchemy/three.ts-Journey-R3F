@@ -1,4 +1,4 @@
-import { OrbitControls, useHelper, ContactShadows, BakeShadows, softShadows, AccumulativeShadows, RandomizedLight } from '@react-three/drei'
+import { OrbitControls, useHelper, ContactShadows, Sky } from '@react-three/drei'
 import { useControls } from 'leva';
 import { useFrame } from '@react-three/fiber';
 import { Perf } from 'r3f-perf';
@@ -37,6 +37,13 @@ export default function Experience() {
             min: 0,
             max: 10,
         }
+    });
+
+    const { sunPosition } = useControls('Sun', {
+        sunPosition: {
+            value: [0.01, 0.01, 0.01],
+            step: 0.001
+        }
     })
 
     return (
@@ -44,6 +51,8 @@ export default function Experience() {
             {/* <BakeShadows /> */}
 
             <color args={['ivory']} attach='background' />
+
+            <Sky sunPosition={sunPosition} />
 
             <Perf position='top-left' />
 
@@ -57,7 +66,7 @@ export default function Experience() {
                 color={color} opacity={opactity} blur={blur} frames={1}
             />
 
-            <directionalLight ref={dirLight} position={[1, 2, 3]}
+            <directionalLight ref={dirLight} position={sunPosition}
                 intensity={1.5} castShadow
                 shadow-mapSize={[1024, 1024]}
                 shadow-camera-near={1}
