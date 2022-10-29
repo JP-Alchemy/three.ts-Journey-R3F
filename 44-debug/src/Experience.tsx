@@ -1,5 +1,5 @@
 import { OrbitControls } from '@react-three/drei'
-import { useControls, button } from 'leva';
+import { useControls } from 'leva';
 import { Perf } from 'r3f-perf';
 
 export default function Experience() {
@@ -7,29 +7,6 @@ export default function Experience() {
     const { showPerf } = useControls({
         showPerf: false
     })
-
-    const { position, color, visible } = useControls('Sphere', {
-        position: {
-            value: { x: -2, y: 0 },
-            step: 0.01,
-            joystick: 'invertY'
-        },
-        color: '#FF0000',
-        visible: true,
-        clickMe: button(() => console.log('OK')),
-        choice: {
-            options: ['a', 'b', 'c']
-        }
-    });
-
-    const { scale } = useControls('Cube', {
-        scale: {
-            value: 1.5,
-            step: 0.01,
-            min: 0,
-            max: 5
-        }
-    });
 
     return (
         <>
@@ -40,14 +17,14 @@ export default function Experience() {
             <ambientLight intensity={0.5} />
 
             <group>
-                <mesh position-x={2} scale={scale}>
+                <mesh position-x={2}>
                     <boxGeometry />
                     <meshStandardMaterial color="mediumpurple" />
                 </mesh>
 
-                <mesh position={[position.x, position.y, 0]} visible={visible}>
+                <mesh>
                     <sphereGeometry />
-                    <meshStandardMaterial color={color} />
+                    <meshStandardMaterial />
                 </mesh>
             </group>
 
