@@ -45,6 +45,7 @@
     "@types/node": "^16.18.2",
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
-    "@types/three": "^0.144.0"
+    "@types/three": "^0.144.0",
+    "r3f-perf": "^6.5.0"
   }
 }
