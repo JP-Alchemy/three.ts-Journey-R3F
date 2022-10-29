@@ -1,9 +1,8 @@
 import { OrbitControls } from '@react-three/drei'
-import { useControls } from 'leva';
-import { useFrame } from '@react-three/fiber';
 import { Perf } from 'r3f-perf';
-import { useRef } from 'react';
-import * as THREE from 'three';
+import { Suspense } from 'react';
+import Model from './Model';
+import Placeholder from './Placeholder';
 
 export default function Experience() {
 
@@ -21,6 +20,10 @@ export default function Experience() {
                 <planeGeometry />
                 <meshStandardMaterial color="greenyellow" />
             </mesh>
+
+            <Suspense fallback={<Placeholder position-y={1.5} scale={[2, 3, 2]} />}>
+                <Model />
+            </Suspense>
         </>
     )
 }

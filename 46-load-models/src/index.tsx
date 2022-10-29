@@ -12,7 +12,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Leva />
-    <Canvas shadows={false}>
+    <Canvas shadows={false} camera={{ position: [1, 2, 6] }}>
       <Experience />
     </Canvas>
   </React.StrictMode>
