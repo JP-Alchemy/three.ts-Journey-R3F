@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@react-three/drei": "^9.39.0",
     "@react-three/fiber": "^8.8.10",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -39,10 +40,11 @@
     ]
   },
   "devDependencies": {
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.2",
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
     "@types/three": "^0.144.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.2"
+    "r3f-perf": "^6.5.0"
   }
 }
