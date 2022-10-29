@@ -1,25 +1,50 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { ReactNode, useMemo, useState } from 'react';
+import Clicker from './Clicker';
+import People from './People';
 
-function App() {
+interface IAppProps {
+  children?: ReactNode;
+  clickerCount: number;
+}
+
+function App({ children, clickerCount }: IAppProps) {
+  const [hasClicker, setHasClicker] = useState(false);
+  const [count, setCount] = useState(0);
+
+  const colors = useMemo(() => {
+    const colors = [];
+
+    for (let i = 0; i < clickerCount; i++)
+      colors.push(`hsl(${Math.random() * 360}deg, 100%,70%)`);
+
+    return colors;
+  }, [])
+
+  const toggleClicker = () => {
+    setHasClicker(!hasClicker);
+  }
+
+  const increment = () => {
+    setCount(count + 1);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {children}
+
+      <div>Total Count: {count}</div>
+
+      <button onClick={toggleClicker}>{hasClicker ? 'Hide' : 'Show'} Clicker</button>
+      {hasClicker &&
+        <>
+          {Array.from(Array(clickerCount)).map((_, i) =>
+            (<Clicker key={i} increment={increment} keyName={`count-${i}`} color={colors[i]} />)
+          )}
+        </>
+      }
+
+      <People/>
+    </>
   );
 }
 
