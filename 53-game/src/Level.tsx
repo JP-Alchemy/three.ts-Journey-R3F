@@ -1,8 +1,9 @@
 import { useFrame } from '@react-three/fiber';
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { RigidBody, RigidBodyApi, Vector3Array } from '@react-three/rapier'
+import { RigidBody, RigidBodyApi, Vector3Array, CuboidCollider } from '@react-three/rapier'
 import { useGLTF } from '@react-three/drei';
+import { BoxGeometry } from 'three';
 
 (THREE as any).ColorManagement.legacyMode = false;
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
@@ -29,18 +30,18 @@ function EndBlock(props: IBlockProps) {
         console.log(obj);
         obj.castShadow = true;
     });
-    
+
     return (
         <group position={props.position}>
             <RigidBody type="fixed" colliders="hull" friction={0} restitution={0.2}>
-                <primitive object={item.scene} scale={0.2} position-y={0.25}/>
+                <primitive object={item.scene} scale={0.2} position-y={0.25} />
             </RigidBody>
             <mesh scale={[4, 0.2, 4]} geometry={boxGeometry} material={floor1Mat} receiveShadow />
         </group>
     )
 }
 
-function BlockSpinner(props: IBlockProps) {
+export function BlockSpinner(props: IBlockProps) {
 
     const itemRef = useRef<RigidBodyApi>(null!);
     const [randSpeed] = useState(() => (Math.random() + 0.2) * (Math.random() < .5 ? -1 : 1));
@@ -62,7 +63,7 @@ function BlockSpinner(props: IBlockProps) {
     );
 }
 
-function BlockAxe(props: IBlockProps) {
+export function BlockAxe(props: IBlockProps) {
 
     const itemRef = useRef<RigidBodyApi>(null!);
     const [timeOffset] = useState(() => (Math.random() * Math.PI * 2));
@@ -82,7 +83,7 @@ function BlockAxe(props: IBlockProps) {
     );
 }
 
-function BlockLimbo(props: IBlockProps) {
+export function BlockLimbo(props: IBlockProps) {
 
     const itemRef = useRef<RigidBodyApi>(null!);
     const [timeOffset] = useState(() => (Math.random() * Math.PI * 2));
@@ -102,15 +103,46 @@ function BlockLimbo(props: IBlockProps) {
     );
 }
 
-export default function Level() {
+interface IBooundsProps {
+    length: number;
+}
+function Bounds(props: IBooundsProps) {
+    return (
+        <>
+            <RigidBody type="fixed" friction={0} restitution={0.2}>
+                <mesh scale={[0.3, 1.5, (props.length + 2) * 4]} castShadow geometry={boxGeometry} material={wallMat} position={[2.15, 0.75, -(props.length + 1) * 2]} />
+                <mesh scale={[0.3, 1.5, (props.length + 2) * 4]} receiveShadow geometry={boxGeometry} material={wallMat} position={[-2.15, 0.75, -(props.length + 1) * 2]} />
+                <mesh scale={[4, 1.5, 0.3]} receiveShadow geometry={boxGeometry} material={wallMat} position={[0, 0.75, -(props.length + 1.5) * 4]} />
+                <CuboidCollider args={[2, 0.1, 2 * (props.length + 2)]} position={[0, -0.1, -(props.length + 1) * 2]} friction={1} restitution={0.2} />
+            </RigidBody>
+        </>
+    )
+}
+
+interface ILevelProps {
+    count?: number;
+    types?: any[];
+}
+
+export function Level({ count = 5, types = [BlockLimbo, BlockSpinner, BlockAxe] }: ILevelProps) {
+
+    const blocks = useMemo(() => {
+        const tBlocks = [];
+
+        for (let i = 0; i < count; i++) {
+            tBlocks.push(types[Math.floor(Math.random() * types.length)]);
+        }
+        console.log(tBlocks);
+
+        return tBlocks;
+    }, [count, types])
 
     return (
         <>
             <StartBlock position={[0, 0, 0]} />
-            <BlockSpinner position={[0, 0, -4]} />
-            <BlockLimbo position={[0, 0, -8]} />
-            <BlockAxe position={[0, 0, -12]} />
-            <EndBlock position={[0, 0, -16]} />
+            {blocks.map((Block, i) => <Block key={i} position={[0, 0, -(i + 1) * 4]} />)}
+            <EndBlock position={[0, 0, -(count + 1) * 4]} />
+            <Bounds length={count} />
         </>
     );
 }
